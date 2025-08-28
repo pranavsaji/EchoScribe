@@ -21,8 +21,8 @@ So I built **EchoScribe** 🚀 – a fun little project that transcribes WhatsAp
 
 ### 1. Clone the repo  
 ```bash
-git clone git@github.com:pranavsaji/whatsapp-audio-to-text.git
-cd whatsapp-audio-to-text
+git clone https://github.com/pranavsaji/EchoScribe.git
+cd EchoScribe
 ````
 
 ### 2. Create a virtual environment
