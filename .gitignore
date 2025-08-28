@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Audio/Temp
+*.wav
+*.mp3
+*.m4a
+*.opus
+*.ogg
+*.tmp
