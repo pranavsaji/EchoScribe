@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.pkl
+*.pickle
+.cache/
+.pytest_cache/
+
 
 # Virtual environment
 venv/
@@ -23,3 +28,6 @@ venv/
 *.opus
 *.ogg
 *.tmp
+
+# Env
+.env

@@ -3,3 +3,5 @@ pydub
 numpy
 torch
 gradio
+groq
+python-dotenv
