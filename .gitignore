@@ -7,8 +7,10 @@ __pycache__/
 *.pickle
 .cache/
 .pytest_cache/
-
-
+.python-version
+*.db
+*.wav
+voice_clone_test.py
 # Virtual environment
 venv/
 
@@ -31,3 +33,11 @@ venv/
 
 # Env
 .env
+
+# Audio/Temp inside voices only
+voices/*.wav
+voices/*.mp3
+voices/*.m4a
+voices/*.opus
+voices/*.ogg
+voices/*.tmp
