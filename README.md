@@ -115,3 +115,68 @@ MIT — free to use, modify, and share.
 * 📊 Analytics dashboard for **ratings & usage insights**
 * 🎛️ Fine-grained **voice controls** (pitch, speed, emotion)
 
+---
+
+## 🛠️ Troubleshooting
+
+### `Expecting value: line 1 column 1 (char 0)`
+
+Symptom: transcription and audio conversion both fail. The UI shows `Error` in every
+output box, or `❌ Conversion failed: Expecting value: line 1 column 1 (char 0)`.
+
+Cause: a **broken ffmpeg install**, not a bug in this app. Pydub shells out to `ffprobe`;
+if that binary can't start, it returns empty output and Pydub does `json.loads("")`.
+Every feature that touches audio fails at once with the same message.
+
+Confirm it by running `ffprobe` directly — a linker error like this is the giveaway:
+
+```bash
+ffprobe -show_format some_audio.m4a
+# dyld: Library not loaded: /opt/homebrew/opt/x265/lib/libx265.215.dylib
+```
+
+This happens on macOS when a partial `brew upgrade` leaves ffmpeg linked against an
+x265 version that is no longer installed. Fix by relinking ffmpeg:
+
+```bash
+brew reinstall ffmpeg
+```
+
+Then re-run `ffprobe` to confirm it prints JSON. **Read the server-side traceback, not
+the browser console** — the console only shows the error string being echoed back as a
+filename (a `403` on `/gradio_api/file=...`), which hides the real cause.
+
+### Environment setup (pyenv)
+
+`.python-version` pins `voice_env`, which pyenv only resolves once `virtualenv-init` is
+loaded in your shell. Without it, `python app.py` silently falls back to system Python
+and fails on a missing `gradio`. Add to your `~/.zshrc`:
+
+```bash
+# Load pyenv and pyenv-virtualenv
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+pyenv activate voice_env
+```
+
+Or bypass the shell entirely by calling the interpreter directly:
+
+```bash
+~/.pyenv/versions/3.11.9/envs/voice_env/bin/python app.py
+```
+
+### Transcription is slow
+
+Whisper runs **locally on CPU**, roughly 25s of compute per minute of audio — so a
+42-minute recording takes 15–20 minutes with no progress indicator. To speed it up, drop
+to a smaller model in `backend/transcriber.py`:
+
+```python
+def transcribe_audio(audio_file: str, model_size: str = "base") -> str:
+```
+
+Note that `transcribe_audio` calls Whisper with `task="translate"`, which always forces
+English output. On English-only audio this is both slower and less accurate than
+`task="transcribe"`.
